@@ -5,13 +5,17 @@ import java.awt.event.ActionListener;
 
 public class BallGravity extends JPanel implements ActionListener {
     private int width = 400;
-    private int height = 500;
+    private int height = 550;
     private int ballSize = 20;
     private Ball ball;
+    private Rectangle floor;
 
-     BallGravity() {
+    public BallGravity() {
         // create a ball with initial position (x = width/2, y = ballSize), initial speed (0, 0), and gravity acceleration of 0.1
         ball = new Ball(width / 2, ballSize, 0, 0, 0.1);
+
+        // create a rectangle at the bottom of the frame
+        floor = new Rectangle(0, height - ballSize, width, ballSize);
 
         // set up the timer to update the ball's position every 10 milliseconds
         Timer timer = new Timer(10, this);
@@ -24,9 +28,9 @@ public class BallGravity extends JPanel implements ActionListener {
         ball.update();
 
         // check if the ball hits the bottom of the frame
-        if (ball.getY() + ballSize > height) {
+        if (ball.getY() + ballSize > floor.getY()) {
             // if the ball hits the bottom, reset its position and speed
-            ball.setY(height - ballSize);
+            ball.setY(floor.getY() - ballSize);
             ball.setSpeedY(-ball.getSpeedY() * 0.8); // apply some bounce by reversing the y speed and reducing it by 20%
         }
 
@@ -38,6 +42,10 @@ public class BallGravity extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        // draw the floor rectangle
+        g.setColor(Color.GRAY);
+        g.fillRect((int) floor.getX(), (int) floor.getY(), (int) floor.getWidth(), (int) floor.getHeight());
+
         // draw the ball on the panel
         g.setColor(Color.BLUE);
         g.fillOval((int) ball.getX(), (int) ball.getY(), ballSize, ballSize);
@@ -46,7 +54,7 @@ public class BallGravity extends JPanel implements ActionListener {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Ball Gravity");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 500);
+        frame.setSize(400, 600);
         frame.setContentPane(new BallGravity());
         frame.setVisible(true);
     }
@@ -73,10 +81,24 @@ public class BallGravity extends JPanel implements ActionListener {
         }
 
         // getters and setters
-        public double getX() { return x; }
-        public double getY() { return y; }
-        public void setY(double y) { this.y = y; }
-        public double getSpeedY() { return speedY; }
-        public void setSpeedY(double speedY) { this.speedY = speedY; }
+        public double getX() {
+            return x;
+        }
+
+        public double getY() {
+            return y;
+        }
+
+        public void setY(double y) {
+            this.y = y;
+        }
+
+        public double getSpeedY() {
+            return speedY;
+        }
+
+        public void setSpeedY(double speedY) {
+            this.speedY = speedY;
+        }
     }
 }
